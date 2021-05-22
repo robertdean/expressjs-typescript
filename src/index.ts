@@ -5,7 +5,7 @@ import * as routes from "./routes";
 
 dotenv.config();
 
-const port = process.env.SERVER_PORT;
+const port = 8080;// process.env.SERVER_PORT;
 const app = express();
 
 app.use(express.json());
