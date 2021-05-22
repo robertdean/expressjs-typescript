@@ -1,24 +1,27 @@
 import * as express from "express";
+import { stringify } from "querystring";
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3'
-
+sqlite3.verbose()
+export async function openDb () {
+    return open({
+      filename: './src/chinook.db',
+      driver: sqlite3.Database
+    })
+  }
 export const register = (app: express.Application) => {
     // home page
     app.get("/", async (req: any, res) => {
-        const dbx = sqlite3.verbose();
-        const db = new dbx.Database('./src/chinook.db', (err) => {
-            if (err) {
-              console.log(err);
-            }
-            console.log('Connected to the chinook database.');
-          });
-  
-        const result = await db.all('SELECT PlaylistId id, Name name FROM playlists');
+        const db = await openDb();
+        const result = await db.all('SELECT * FROM Playlists');
         console.log(result);
-        res.render("index");
+        res.render("index", { sqldata: result });
     });
     // about page
     app.get("/about", async (req: any, res) => {
         res.render("about");
     });
+
+
+
 };
